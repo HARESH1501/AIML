@@ -208,10 +208,7 @@ export default function Dashboard({ students = [] }) {
     <div className="p-3 p-md-4">
       <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <h2 className="mb-0">Subject-wise Analysis</h2>
-        <span className="badge bg-success fs-6">
-          {filteredStudents.length} Students (Roll No. up to 139)
-        </span>
-      </div>
+             </div>
 
       <div className="row g-3 g-md-4 mb-4">
         <div className="col-12 col-sm-6 col-lg-3">
@@ -315,54 +312,53 @@ export default function Dashboard({ students = [] }) {
                     Each pie chart shows pass, fail, and absent counts; highest mark is shown under the chart.
                   </p>
                 </div>
-      </div>
+              </div>
 
               {topSubjectPieData.length === 0 ? (
                 <div className="alert alert-info mb-0">Subject data is unavailable.</div>
               ) : (
                 <div className={`row g-4 ${topSubjectPieData.length === 1 ? "justify-content-center" : ""}`}>
                   {topSubjectPieData.map(subjectInfo => {
-                    const columnClass =
-                      topSubjectPieData.length === 1
-                        ? "col-12 col-md-8 col-xl-6"
-                        : "col-12 col-md-6 col-xl-4";
+                    const columnClass = topSubjectPieData.length === 1
+                      ? "col-12 col-md-8 col-xl-6"
+                      : "col-12 col-md-6 col-xl-4";
 
                     return (
-                      <div className={`${columnClass}`} key={subjectInfo.subject}>
-                      <div className="border rounded h-100 p-3">
-                        <h6 className="fw-semibold text-center mb-3">{subjectInfo.subject}</h6>
-                        <div style={{ width: "100%", height: 220 }}>
-        <ResponsiveContainer>
-                            <PieChart>
-                              <Pie
-                                data={subjectInfo.pieData}
-                                dataKey="value"
-                                nameKey="name"
-                                innerRadius="45%"
-                                outerRadius="70%"
-                                paddingAngle={4}
-                                label={({ name, value }) => `${name}: ${value}`}
-                                labelLine={false}
-                              >
-                                {subjectInfo.pieData.map((entry, index) => (
-                                  <Cell key={entry.name} fill={PIE_COLORS[index % PIE_COLORS.length]} />
-                                ))}
-                              </Pie>
-                              <Legend verticalAlign="bottom" height={30} />
-                              <Tooltip content={<CustomTooltip />} />
-                            </PieChart>
-        </ResponsiveContainer>
+                      <div className={columnClass} key={subjectInfo.subject}>
+                        <div className="border rounded h-100 p-3">
+                          <h6 className="fw-semibold text-center mb-3">{subjectInfo.subject}</h6>
+                          <div style={{ width: "100%", height: 220 }}>
+                            <ResponsiveContainer>
+                              <PieChart>
+                                <Pie
+                                  data={subjectInfo.pieData}
+                                  dataKey="value"
+                                  nameKey="name"
+                                  innerRadius="45%"
+                                  outerRadius="70%"
+                                  paddingAngle={4}
+                                  label={({ name, value }) => `${name}: ${value}`}
+                                  labelLine={false}
+                                >
+                                  {subjectInfo.pieData.map((entry, index) => (
+                                    <Cell key={entry.name} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                                  ))}
+                                </Pie>
+                                <Legend verticalAlign="bottom" height={30} />
+                                <Tooltip content={<CustomTooltip />} />
+                              </PieChart>
+                            </ResponsiveContainer>
+                          </div>
+                          <p className="text-center text-muted small mb-1">
+                            Highest: <span className="fw-semibold">{subjectInfo.highest}</span>
+                          </p>
+                          <p className="text-center small mb-0">
+                            Pass: <span className="text-success fw-bold">
+                              {subjectInfo.passCount} ({stats.totalStudents ? ((subjectInfo.passCount / stats.totalStudents) * 100).toFixed(2) : "0.00"}%)
+                            </span> · Fail: <span className="text-danger fw-bold">{subjectInfo.failCount}</span> · Absent: <span className="text-muted fw-bold">{subjectInfo.absentCount}</span>
+                          </p>
                         </div>
-                        <p className="text-center text-muted small mb-1">
-                          Highest: <span className="fw-semibold">{subjectInfo.highest}</span>
-                        </p>
-                        <p className="text-center small mb-0">
-                          Pass: <span className="text-success fw-bold">{subjectInfo.passCount}</span> · Fail:{" "}
-                          <span className="text-danger fw-bold">{subjectInfo.failCount}</span> · Absent:{" "}
-                          <span className="text-muted fw-bold">{subjectInfo.absentCount}</span>
-                        </p>
                       </div>
-                    </div>
                     );
                   })}
                 </div>
@@ -371,52 +367,7 @@ export default function Dashboard({ students = [] }) {
           </div>
         </div>
 
-        <div className="col-12 col-xl-6">
-          <div className="card shadow-sm h-100">
-            <div className="card-body">
-              <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
-                <div>
-                  <h5 className="card-title mb-1">Students by Failed Subjects</h5>
-                  <p className="text-muted small mb-0">
-                    Shows how many students failed 1 subject, 2 subjects, and so on.
-                  </p>
-                </div>
-      </div>
-
-              {failDistributionData.length === 0 ? (
-                <div className="alert alert-success mb-0">
-                  No failing students detected in the dataset.
-                </div>
-              ) : (
-                <div style={{ height: "420px" }}>
-        <ResponsiveContainer>
-                    <PieChart>
-                      <Pie
-                        data={failDistributionData}
-                        dataKey="value"
-                        nameKey="name"
-                        innerRadius="40%"
-                        outerRadius="70%"
-                        paddingAngle={2}
-                        label={({ name, value }) => `${name}: ${value}`}
-                        labelLine={false}
-                      >
-                        {failDistributionData.map((entry, index) => (
-                          <Cell
-                            key={entry.name}
-                            fill={FAIL_DISTRIBUTION_COLORS[index % FAIL_DISTRIBUTION_COLORS.length]}
-                          />
-                        ))}
-                      </Pie>
-            <Legend />
-                      <Tooltip content={<CustomTooltip />} />
-                    </PieChart>
-        </ResponsiveContainer>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+        {/* Removed "Students by Failed Subjects" card per user request */}
       </div>
 
       <div className="row g-4 mt-1">
